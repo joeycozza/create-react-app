@@ -198,6 +198,13 @@ module.exports = function(
     }
   }
 
+  const npmInstallArgs = ['install', '--save', 'fs-webdev/fs-dialog'];
+  const proc = spawn.sync('npm', npmInstallArgs, { stdio: 'inherit' });
+  if (proc.status !== 0) {
+    console.error(`\`${command} ${args.join(' ')}\` failed`);
+    return;
+  }
+
   if (useTypeScript) {
     verifyTypeScriptSetup();
   }
