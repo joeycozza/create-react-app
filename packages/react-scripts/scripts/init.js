@@ -83,9 +83,6 @@ module.exports = function(
   template
 ) {
   debugger;
-  console.log('\n\n\n\n\n');
-  console.log('appPath: ', appPath)
-  console.log('\n\n\n\n\n');
   const ownPath = path.dirname(
     require.resolve(path.join(__dirname, '..', 'package.json'))
   );
@@ -170,9 +167,10 @@ module.exports = function(
   }
   args.push('react', 'react-dom');
 
-  // Install additional template dependencies, if present
+  // Install additional template dependencies that we define
   const templateDependenciesPath = path.join(
-    appPath,
+    __dirname,
+    '../fixtures/kitchensink',
     '.template.dependencies.json'
   );
   if (fs.existsSync(templateDependenciesPath)) {
@@ -182,7 +180,8 @@ module.exports = function(
         return `${key}@${templateDependencies[key]}`;
       })
     );
-    fs.unlinkSync(templateDependenciesPath);
+    const templateGithubDependencies = require(templateDependenciesPath).githubDependencies;
+    args = args.concat(templateGithubDependencies);
   }
 
   // Install react and react-dom for backward compatibility with old CRA cli
