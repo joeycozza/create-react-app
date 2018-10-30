@@ -82,6 +82,10 @@ module.exports = function(
   originalDirectory,
   template
 ) {
+  debugger;
+  console.log('\n\n\n\n\n');
+  console.log('appPath: ', appPath)
+  console.log('\n\n\n\n\n');
   const ownPath = path.dirname(
     require.resolve(path.join(__dirname, '..', 'package.json'))
   );
