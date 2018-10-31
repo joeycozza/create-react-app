@@ -76,7 +76,7 @@ function tryGitInit(appPath) {
   }
 }
 
-module.exports = function(
+module.exports = async function(
   appPath,
   appName,
   verbose,
@@ -84,7 +84,7 @@ module.exports = function(
   template
 ) {
   debugger;
-  const frontierConfig = frontierInit.promptForConfig(appPath);
+  const answers = await frontierInit.promptForConfig(appPath);
   const ownPath = path.dirname(
     require.resolve(path.join(__dirname, '..', 'package.json'))
   );
@@ -203,7 +203,7 @@ module.exports = function(
     }
   }
 
-  frontierInit.installFrontierDependencies(command, args);
+  frontierInit.installFrontierDependencies(appPath, answers);
 
   if (useTypeScript) {
     verifyTypeScriptSetup();

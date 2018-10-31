@@ -1,3 +1,5 @@
+'use strict';
+
 const fs = require('fs-extra');
 const os = require('os');
 const path = require('path');
@@ -35,6 +37,7 @@ async function promptForConfig() {
 
 function packageJsonWritten() {}
 
+//TODO: use "command" from init.js so it is smart with yarn vs npm
 function installFrontierDependencies(appPath, answers) {
   const npmInstallArgs = [
     'install',
@@ -44,12 +47,12 @@ function installFrontierDependencies(appPath, answers) {
     'i18next-browser-languagedetector@2.2.3',
     'i18next-pseudo@2.0.1',
   ];
-  const { polymer, redux } = answers.additionalFeatures;
+  const { additionalFeatures } = answers;
 
-  if (polymer) {
+  if (additionalFeatures.includes('polymer')) {
     configurePolymer(appPath);
   }
-  if (redux) {
+  if (additionalFeatures.includes('redux')) {
     configureRedux();
   }
 
@@ -85,20 +88,21 @@ function configurePolymer(appPath) {
   const proc = spawn.sync(
     'npm',
     [
-      [
-        'install',
-        '--save-dev',
-        'vendor-copy@2.0.0',
-        '@webcomponents/webcomponentsjs@2.1.3',
-      ],
+      'install',
+      '--save-dev',
+      'vendor-copy@2.0.0',
+      '@webcomponents/webcomponentsjs@2.1.3',
     ],
     { stdio: 'inherit' }
   );
   if (proc.status !== 0) {
     console.error(
-      `\`npm ${['install', '--save-dev', 'vendor-copy@2.0.0'].join(
-        ' '
-      )}\` failed`
+      `\`npm ${[
+        'install',
+        '--save-dev',
+        'vendor-copy@2.0.0',
+        '@webcomponents/webcomponentsjs@2.1.3',
+      ].join(' ')}\` failed`
     );
     return;
   }
