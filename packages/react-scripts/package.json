@@ -1,7 +1,7 @@
 {
   "name": "react-scripts",
   "version": "2.1.0",
-  "frontierVersion": "1.5.3",
+  "frontierVersion": "1.6.0",
   "description": "Configuration and scripts for Create React App.",
   "repository": "joeycozza/create-react-app",
   "license": "MIT",
@@ -51,6 +51,7 @@
     "fs-extra": "7.0.0",
     "html-webpack-plugin": "4.0.0-alpha.2",
     "identity-obj-proxy": "3.0.0",
+    "inquirer": "^6.2.0",
     "jest": "23.6.0",
     "jest-pnp-resolver": "1.0.1",
     "jest-resolve": "23.6.0",

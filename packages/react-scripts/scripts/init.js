@@ -22,6 +22,7 @@ const spawn = require('react-dev-utils/crossSpawn');
 const { defaultBrowsers } = require('react-dev-utils/browsersHelper');
 const os = require('os');
 const verifyTypeScriptSetup = require('./utils/verifyTypeScriptSetup');
+const frontierInit = require('./utils/frontierInit');
 
 function isInGitRepository() {
   try {
@@ -83,6 +84,7 @@ module.exports = function(
   template
 ) {
   debugger;
+  const frontierConfig = frontierInit.promptForConfig(appPath);
   const ownPath = path.dirname(
     require.resolve(path.join(__dirname, '..', 'package.json'))
   );
@@ -114,6 +116,8 @@ module.exports = function(
     path.join(appPath, 'package.json'),
     JSON.stringify(appPackage, null, 2) + os.EOL
   );
+
+  frontierInit.packageJsonWritten();
 
   const readmeExists = fs.existsSync(path.join(appPath, 'README.md'));
   if (readmeExists) {
@@ -180,7 +184,8 @@ module.exports = function(
         return `${key}@${templateDependencies[key]}`;
       })
     );
-    const templateGithubDependencies = require(templateDependenciesPath).githubDependencies;
+    const templateGithubDependencies = require(templateDependenciesPath)
+      .githubDependencies;
     args = args.concat(templateGithubDependencies);
   }
 
@@ -198,12 +203,7 @@ module.exports = function(
     }
   }
 
-  const npmInstallArgs = ['install', '--save', 'fs-webdev/fs-dialog'];
-  const proc = spawn.sync('npm', npmInstallArgs, { stdio: 'inherit' });
-  if (proc.status !== 0) {
-    console.error(`\`${command} ${args.join(' ')}\` failed`);
-    return;
-  }
+  frontierInit.installFrontierDependencies(command, args);
 
   if (useTypeScript) {
     verifyTypeScriptSetup();
