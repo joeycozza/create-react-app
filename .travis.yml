@@ -5,6 +5,7 @@ node_js:
 install: 
   - "npm i"
   - "cd packages/react-scripts && npm i"
+  - "cd ../../"
 before_deploy: "cd packages && tar -zcvf react-scripts-$TRAVIS_TAG.tgz react-scripts"
 deploy:
   provider: releases
