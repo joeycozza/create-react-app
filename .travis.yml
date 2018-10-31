@@ -1,8 +1,10 @@
 language: node_js
 node_js:
-- 8
-- 10
-install: "npm i"
+  - 8
+  - 10
+install: 
+  - "npm i"
+  - "cd packages/react-scripts && npm i"
 before_deploy: "cd packages && tar -zcvf react-scripts-$TRAVIS_TAG.tgz react-scripts"
 deploy:
   provider: releases
