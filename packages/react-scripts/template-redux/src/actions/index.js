@@ -1,3 +1,3 @@
-import exampleAction from './exampleAction.js';
+import updateTimestamp from './updateTimestamp.js';
 
-export default { exampleAction };
+export default { updateTimestamp };
