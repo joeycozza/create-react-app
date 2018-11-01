@@ -83,7 +83,6 @@ module.exports = async function(
   originalDirectory,
   template
 ) {
-  debugger;
   const answers = await frontierInit.promptForConfig(appPath);
   const ownPath = path.dirname(
     require.resolve(path.join(__dirname, '..', 'package.json'))
@@ -171,10 +170,9 @@ module.exports = async function(
   }
   args.push('react', 'react-dom');
 
-  // Install additional template dependencies that we define
+  // Install additional template dependencies, if present
   const templateDependenciesPath = path.join(
-    __dirname,
-    '../fixtures/kitchensink',
+    appPath,
     '.template.dependencies.json'
   );
   if (fs.existsSync(templateDependenciesPath)) {
@@ -184,9 +182,7 @@ module.exports = async function(
         return `${key}@${templateDependencies[key]}`;
       })
     );
-    const templateGithubDependencies = require(templateDependenciesPath)
-      .githubDependencies;
-    args = args.concat(templateGithubDependencies);
+    fs.unlinkSync(templateDependenciesPath);
   }
 
   // Install react and react-dom for backward compatibility with old CRA cli
@@ -203,7 +199,7 @@ module.exports = async function(
     }
   }
 
-  frontierInit.installFrontierDependencies(appPath, answers);
+  frontierInit.installFrontierDependencies(appPath, answers, useYarn);
 
   if (useTypeScript) {
     verifyTypeScriptSetup();
