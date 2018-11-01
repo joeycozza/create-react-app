@@ -86,7 +86,22 @@ function configurePolymer(appPath, useYarn) {
   ];
   installModulesSync(polymerModules, useYarn, true);
 
-  //TODO: read in the appPath's template and inject the code necessary for polymer to work
+  injectPolymerCode(appPath);
+}
+
+function injectPolymerCode(appPath) {
+  const indexPath = path.join(appPath, 'public/index.html');
+  const polymerCode = `
+    <script src="%PUBLIC_URL%/vendor/webcomponents-bundle.js"></script>
+    <script src="%PUBLIC_URL%/vendor/custom-elements-es5-adapter.js"></script>
+ `;
+
+  let indexHtml = fs.readFileSync(indexPath, 'UTF8');
+  indexHtml = indexHtml.replace(
+    '<!--FRONTIER WEBCOMPONENT LOADER CODE FRONTIER -->',
+    polymerCode
+  );
+  fs.writeFileSync(indexPath, indexHtml);
 }
 
 function configureRedux(appPath, useYarn) {
