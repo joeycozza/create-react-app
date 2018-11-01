@@ -10,6 +10,7 @@ module.exports = {
   installFrontierDependencies,
   promptForConfig,
   packageJsonWritten,
+  cleanupFrontierCode,
 };
 
 async function promptForConfig() {
@@ -36,21 +37,19 @@ async function promptForConfig() {
 
 function packageJsonWritten() {}
 
-function installFrontierDependencies(appPath, answers, useYarn) {
+function installFrontierDependencies(appPath, answers, useYarn, ownPath) {
   const { additionalFeatures } = answers;
 
   if (additionalFeatures.includes('polymer')) {
     configurePolymer(appPath, useYarn);
   }
   if (additionalFeatures.includes('redux')) {
-    configureRedux(appPath, useYarn);
+    configureRedux(appPath, useYarn, ownPath);
   }
 
   const defaultModules = [
     'http-proxy-middleware@0.19.0',
-    'i18next@11.9.0',
-    'i18next-browser-languagedetector@2.2.3',
-    'i18next-pseudo@2.0.1',
+    'react-router-dom@4.3.1',
   ];
   installModulesSync(defaultModules, useYarn);
 }
@@ -104,17 +103,20 @@ function injectPolymerCode(appPath) {
   fs.writeFileSync(indexPath, indexHtml);
 }
 
-function configureRedux(appPath, useYarn) {
+function configureRedux(appPath, useYarn, ownPath) {
   const reduxModules = [
-    'react-redux@5.0.7',
-    'react-router-dom@4.3.1',
-    'react-router-redux@4.0.8',
     'redux@4.0.0',
+    'react-redux@5.0.7',
     'redux-logger@3.0.6',
     'redux-thunk@2.3.0',
   ];
   installModulesSync(reduxModules, useYarn);
+
+  const templatePath = path.join(ownPath, 'template-redux');
+  fs.copySync(templatePath, appPath, { overwrite: true });
 }
+
+function cleanupFrontierCode(appPath) {}
 
 function installModulesSync(modules, useYarn, saveDev = false) {
   const { command, args } = buildInstallCommandAndArgs(useYarn, saveDev);

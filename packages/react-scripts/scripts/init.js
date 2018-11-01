@@ -199,7 +199,7 @@ module.exports = async function(
     }
   }
 
-  frontierInit.installFrontierDependencies(appPath, answers, useYarn);
+  frontierInit.installFrontierDependencies(appPath, answers, useYarn, ownPath);
 
   if (useTypeScript) {
     verifyTypeScriptSetup();
@@ -222,6 +222,8 @@ module.exports = async function(
 
   // Change displayed command to yarn instead of yarnpkg
   const displayedCommand = useYarn ? 'yarn' : 'npm';
+
+  frontierInit.cleanupFrontierCode(appPath);
 
   console.log();
   console.log(`Success! Created ${appName} at ${appPath}`);
