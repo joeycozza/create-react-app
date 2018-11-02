@@ -3,6 +3,7 @@
 const fs = require('fs-extra');
 const os = require('os');
 const path = require('path');
+const chalk = require('chalk');
 const inquirer = require('inquirer');
 const osUtils = require('./osUtils');
 
@@ -13,7 +14,30 @@ module.exports = {
   cleanupFrontierCode,
 };
 
+function help() {
+  const g = chalk.green;
+  const y = chalk.gray;
+  const b = chalk.yellow;
+
+  const TITLE = chalk.bold.underline('Frontier React Scripts');
+  const DESC = 'The Coolest React-Scripterizer You Ever Seen.';
+
+  return `
+       ${g('┏━━┓')}
+   ${y('┏━┓')} ${g('┗━━┛')} ${y('┏━━━━┓')}    ${TITLE}
+   ${y('┗━┛')} ${b('┏━━┓')} ${y('┃    ┃')}
+${g('┏━━━━┓')} ${b('┗━━┛')} ${y('┗━━━━┛')}    ${DESC}
+${g('┃    ┃')}  ${b('//')} ${y('┏━━━━┓')} ${g('⏠')}
+${g('┗━━━━┛')} ${b('/ /')} ${y('┃    ┃')} ${g('⏡')}
+    ${b('\\\\ │ │')} ${y('┗━━━━┛')}
+        ${b('\\ \\ //')}
+         ${b('\\ \\')}
+          ${b('\\ \\')}
+`;
+}
+
 async function promptForConfig() {
+  console.log(help());
   const questions = [
     {
       type: 'checkbox',
@@ -25,8 +49,8 @@ async function promptForConfig() {
           name: 'Using a shared Polymer Component?',
         },
         {
-          value: 'redux',
           name: 'Redux',
+          value: 'redux',
         },
       ],
     },
@@ -46,6 +70,7 @@ function installFrontierDependencies(appPath, answers, useYarn, ownPath) {
   if (additionalFeatures.includes('redux')) {
     configureRedux(appPath, useYarn, ownPath);
   }
+  injectPolymerCode(appPath);
 
   const defaultModules = [
     'http-proxy-middleware@0.19.0',
@@ -84,8 +109,6 @@ function configurePolymer(appPath, useYarn) {
     '@webcomponents/webcomponentsjs@2.1.3',
   ];
   installModulesSync(polymerModules, useYarn, true);
-
-  injectPolymerCode(appPath);
 }
 
 function injectPolymerCode(appPath) {
